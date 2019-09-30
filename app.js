@@ -13,12 +13,12 @@ app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 app.use(cors());
 
 // DB
-mongoose.connect('mongodb+srv://zubeirtech:sLPB6V66P4s8tkNb@zubeirtechdb-jcizl.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true })
+mongoose.connect('mongodb+srv://zubeirtech:sLPB6V66P4s8tkNb@zubeirtechdb-jcizl.mongodb.net/budgetapp?retryWrites=true&w=majority', { useNewUrlParser: true })
     .then(() => console.log('MongoDB connected...'))
     .catch(err => console.log(err));
 
 // Routes
-app.use('/', require('./routes/index'));
+app.use('/categories', require('./routes/index'));
 
 const PORT = process.env.PORT || 3000;
 

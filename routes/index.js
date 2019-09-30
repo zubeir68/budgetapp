@@ -30,21 +30,35 @@ router.get('/', asyncHandler(async (req, res, next) => {
 
 router.post('/', asyncHandler(async (req, res, next) => {
     try {
-        const cat = new JSONAPIDeserializer({ keyForAttribute: 'camelCase'}).deserialize(req.body);
-
-        const newCat = new Category(cat)
-        res.status(200).send(CategorySerializer.serialize(newCat.save()));
-        
+        const cat = await new JSONAPIDeserializer({ keyForAttribute: 'camelCase'}).deserialize(req.body);
+        const newCat = await new Category(cat)
+        res.status(200).send(CategorySerializer.serialize(await newCat.save()));
+        next();
     } catch (error) {
         next(error);
     }
 
 }));
-router.get('/', asyncHandler(async (req, res, next) => {
-
+router.patch('/:id', asyncHandler(async (req, res, next) => {
+    try {
+        const cat = await new JSONAPIDeserializer({ keyForAttribute: 'camelCase' }).deserialize(req.body);
+        const findCat = await Category.findById(req.params.id);
+        findCat.amount = cat.amount;
+        await findCat.save();
+        res.status(200).send(CategorySerializer.serialize(findCat));
+        next();
+    } catch (error) {
+        next(error);
+    }
 }));
-router.get('/', asyncHandler(async (req, res, next) => {
-
+router.delete('/:id', asyncHandler(async (req, res, next) => {
+    try {
+        await Category.deleteOne({ _id: req.params.id });
+        res.status(204).send({});
+        next();
+    } catch (error) {
+        next(error);
+    }
 }));
 
 module.exports = router;
